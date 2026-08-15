@@ -3,6 +3,9 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\LokasiController;
 use App\Http\Controllers\Api\DonasiController;
+use App\Http\Controllers\Api\DompetController;
+use App\Http\Controllers\Api\KonfigurasiPoinController;
+use App\Http\Controllers\Api\UserController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +24,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/donasi', [DonasiController::class, 'store']);
         Route::get('/donasi', [DonasiController::class, 'myDonasi']);
         Route::get('/donasi/{id}', [DonasiController::class, 'show']);
+        Route::get('/dompet', [DompetController::class, 'myDompet']);
     });
 
     // Pengelola
@@ -40,5 +44,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/manajemen/lokasi/{id}', [LokasiController::class, 'update']);
         Route::delete('/manajemen/lokasi/{id}', [LokasiController::class, 'destroy']);
         Route::get('/manajemen/dashboard', [DonasiController::class, 'dashboardAgregat']);
+        Route::get('/manajemen/pengelola', [UserController::class, 'index']);
+Route::post('/manajemen/pengelola', [UserController::class, 'store']);
+Route::delete('/manajemen/pengelola/{id}', [UserController::class, 'destroy']);
+
+Route::get('/konfigurasi-poin', [KonfigurasiPoinController::class, 'index']);
+Route::post('/konfigurasi-poin', [KonfigurasiPoinController::class, 'store']);
     });
 });
