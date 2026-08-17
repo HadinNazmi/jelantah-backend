@@ -46,10 +46,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/manajemen/lokasi/{id}', [LokasiController::class, 'destroy']);
         Route::get('/manajemen/dashboard', [DonasiController::class, 'dashboardAgregat']);
         Route::get('/manajemen/pengelola', [UserController::class, 'index']);
-Route::post('/manajemen/pengelola', [UserController::class, 'store']);
-Route::delete('/manajemen/pengelola/{id}', [UserController::class, 'destroy']);
+        Route::post('/manajemen/pengelola', [UserController::class, 'store']);
+        Route::delete('/manajemen/pengelola/{id}', [UserController::class, 'destroy']);
+        Route::put('/manajemen/pengelola/{id}', [UserController::class, 'update']);
+        Route::put('/manajemen/pengelola/{id}/toggle-status', [UserController::class, 'toggleStatus']);
 
-Route::get('/konfigurasi-poin', [KonfigurasiPoinController::class, 'index']);
-Route::post('/konfigurasi-poin', [KonfigurasiPoinController::class, 'store']);
+        Route::get('/konfigurasi-poin', [KonfigurasiPoinController::class, 'index']);
+        Route::post('/konfigurasi-poin', [KonfigurasiPoinController::class, 'store']);
     });
 });

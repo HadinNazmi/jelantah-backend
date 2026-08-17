@@ -62,4 +62,40 @@ class UserController extends Controller
 
         return response()->json(['message' => 'Akun pengelola berhasil dihapus']);
     }
+
+    public function update(Request $request, $id)
+{
+    $user = User::where('role', 'pengelola')->findOrFail($id);
+
+    $validator = Validator::make($request->all(), [
+        'name' => 'sometimes|string|max:255',
+        'phone' => 'nullable|string|max:20',
+        'nomor_kk' => 'nullable|string|max:20',
+        'jabatan' => 'nullable|string|max:100',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422);
+    }
+
+    $user->update($request->only(['name', 'phone']));
+
+    $user->dataPengelola()->updateOrCreate(
+        ['user_id' => $user->id],
+        $request->only(['nomor_kk', 'jabatan'])
+    );
+
+    return response()->json(['message' => 'Data pengelola berhasil diperbarui', 'user' => $user]);
+}
+
+public function toggleStatus($id)
+{
+    $user = User::where('role', 'pengelola')->findOrFail($id);
+    $user->update(['is_active' => ! $user->is_active]);
+
+    return response()->json([
+        'message' => $user->is_active ? 'Akun diaktifkan' : 'Akun dinonaktifkan',
+        'user' => $user,
+    ]);
+}
 }

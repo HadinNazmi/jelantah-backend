@@ -66,6 +66,10 @@ class AuthController extends Controller
             return response()->json(['message' => 'Email atau password salah'], 401);
         }
 
+        if (! $user->is_active) {
+    return response()->json(['message' => 'Akun ini telah dinonaktifkan'], 403);
+}
+
         // Validasi role sesuai platform
         if ($request->platform === 'mobile' && $user->role !== 'donatur') {
             return response()->json(['message' => 'Akun ini tidak bisa login di aplikasi mobile'], 403);
