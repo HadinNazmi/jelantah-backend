@@ -169,4 +169,39 @@ class DonasiController extends Controller
             'per_lokasi' => $perLokasi,
         ]);
     }
+
+    public function laporanPeriode(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'start_date' => 'required|date',
+        'end_date' => 'required|date|after_or_equal:start_date',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422);
+    }
+
+    $start = $request->start_date . ' 00:00:00';
+    $end = $request->end_date . ' 23:59:59';
+
+    $query = Donasi::where('status', 'selesai')->whereBetween('updated_at', [$start, $end]);
+
+    $totalLiter = (clone $query)->sum('jumlah_terverifikasi');
+    $totalDonasi = (clone $query)->count();
+
+    $perLokasi = Lokasi::withSum(['donasi as total_terkumpul' => function ($q) use ($start, $end) {
+        $q->where('status', 'selesai')->whereBetween('updated_at', [$start, $end]);
+    }], 'jumlah_terverifikasi')
+        ->withCount(['donasi as jumlah_donasi' => function ($q) use ($start, $end) {
+            $q->where('status', 'selesai')->whereBetween('updated_at', [$start, $end]);
+        }])
+        ->get(['id', 'nama']);
+
+    return response()->json([
+        'periode' => ['start' => $request->start_date, 'end' => $request->end_date],
+        'total_liter' => $totalLiter,
+        'total_donasi' => $totalDonasi,
+        'per_lokasi' => $perLokasi,
+    ]);
+}
 }

@@ -50,6 +50,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/manajemen/pengelola/{id}', [UserController::class, 'destroy']);
         Route::put('/manajemen/pengelola/{id}', [UserController::class, 'update']);
         Route::put('/manajemen/pengelola/{id}/toggle-status', [UserController::class, 'toggleStatus']);
+        Route::get('/manajemen/laporan', [DonasiController::class, 'laporanPeriode']);
 
         Route::get('/konfigurasi-poin', [KonfigurasiPoinController::class, 'index']);
         Route::post('/konfigurasi-poin', [KonfigurasiPoinController::class, 'store']);
