@@ -11,11 +11,17 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+Route::post('/reset-password', [AuthController::class, 'resetPassword']);
+Route::get('/reset-password/{token}', function (string $token) {
+    return response()->json(['message' => 'Silakan gunakan token ini di aplikasi Flutter untuk mereset password', 'token' => $token]);
+})->name('password.reset');
 
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
+    Route::put('/profile/password', [AuthController::class, 'changePassword']);
 
     // Donatur
     Route::middleware('role:donatur')->group(function () {
