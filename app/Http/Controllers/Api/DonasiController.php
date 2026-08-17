@@ -69,7 +69,7 @@ class DonasiController extends Controller
         }
 
         $donasi = Donasi::where('lokasi_id', $lokasi->id)
-            ->with('user')
+            ->with(['user', 'verifikator'])
             ->orderBy('created_at', 'desc')
             ->get();
 
